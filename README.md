@@ -222,7 +222,7 @@ barba.init({
 
 ### 🌐 Live Demo
 
-(https://your-new-project-link.vercel.app/)
+(https://barba-js-dual-stairs-04.vercel.app/)
 
 ---
 
@@ -239,4 +239,5 @@ barba.init({
 ## ✍️ Author
 
 **Nischint Singh**
-LinkedIn: https://www.linkedin.com/in/nis
+
+LinkedIn: https://www.linkedin.com/in/nischint-singh-98a329314/
