@@ -22,9 +22,13 @@ Instead of a single-direction staircase, this project introduces **two synchroni
 ## 🆕 What’s New in This Project
 
 ✨ Dual-layer stair animation (top + bottom)
+
 ✨ Center-based stagger for smoother motion
+
 ✨ Cleaner GSAP timeline structure
+
 ✨ Simple and beginner-friendly Barba.js integration
+
 ✨ Improved visual symmetry
 
 ---
