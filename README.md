@@ -22,10 +22,10 @@ Instead of a single-direction staircase, this project introduces **two synchroni
 ## 🆕 What’s New in This Project
 
 ✨ Dual-layer stair animation (top + bottom)
-✨ Structured layout using upper & bottom containers
-✨ Cleaner GSAP timeline control
-✨ Better Barba.js synchronization using `this.async()`
-✨ More scalable and production-ready setup
+✨ Center-based stagger for smoother motion
+✨ Cleaner GSAP timeline structure
+✨ Simple and beginner-friendly Barba.js integration
+✨ Improved visual symmetry
 
 ---
 
@@ -33,20 +33,20 @@ Instead of a single-direction staircase, this project introduces **two synchroni
 
 1. Top stairs slide down & bottom stairs slide up → cover screen
 2. Page switches in the background
-3. Stairs return to original positions → reveal next page
+3. Stairs move back → reveal next page
 
-👉 Creates a smooth **split curtain / dual stair reveal effect**
+👉 Creates a smooth **dual stair / split curtain effect**
 
 ---
 
 ## 🔹 GSAP Setup (Initial State)
 
-```js id="a1b2c3"
+```js id="js1"
 const stair1 = document.querySelectorAll('.stair-top');
 const stair2 = document.querySelectorAll('.stair-bottom');
 
-gsap.set(stair1, { yPercent: -100 });
-gsap.set(stair2, { yPercent: 100 });
+gsap.set(stair1, { y: '-100%' });
+gsap.set(stair2, { y: '100%' });
 ```
 
 📍 Top stairs start above
@@ -58,78 +58,89 @@ gsap.set(stair2, { yPercent: 100 });
 
 ### ▶️ Stairs In (Page Exit)
 
-```js id="d4e5f6"
+```js id="js2"
 function stairsIn() {
-    return gsap.timeline()
-        .to(stair1, {
-            yPercent: 0,
-            duration: 1.2,
-            stagger: 0.1,
-            ease: "power3.inOut"
-        }, 0)
-        .to(stair2, {
-            yPercent: 0,
-            duration: 1.2,
-            stagger: 0.1,
-            ease: "power3.inOut"
-        }, 0);
+    const tl = gsap.timeline();
+
+    tl.to(stair1, {
+        y: "0%",
+        duration: 1.2,
+        stagger: {
+            amount: 0.5,
+            from: "center"
+        },
+        ease: "power3.inOut"
+    }, "start");
+
+    tl.to(stair2, {
+        y: "0%",
+        duration: 1.2,
+        stagger: {
+            amount: 0.5,
+            from: "center"
+        },
+        ease: "power3.inOut"
+    }, "start");
+
+    return tl;
 }
 ```
 
 ✔️ Covers screen from both directions
-✔️ Symmetrical and smooth motion
-✔️ Creates a premium layered feel
+✔️ Center-based stagger creates balanced motion
+✔️ Smooth and cinematic feel
 
 ---
 
 ### ▶️ Stairs Out (Page Enter)
 
-```js id="g7h8i9"
+```js id="js3"
 function stairsOut() {
-    return gsap.timeline()
-        .to(stair1, {
-            yPercent: -100,
-            duration: 1.1,
-            stagger: 0.1,
-            ease: "power3.inOut"
-        }, 0)
-        .to(stair2, {
-            yPercent: 100,
-            duration: 1.1,
-            stagger: 0.1,
-            ease: "power3.inOut"
-        }, 0);
+    const tl = gsap.timeline();
+
+    tl.to(stair1, {
+        y: "-100%",
+        duration: 1.1,
+        stagger: { 
+            amount: 0.5, 
+            from: "center" 
+        },
+        ease: "power3.inOut"
+    }, "start");
+
+    tl.to(stair2, {
+        y: "100%",
+        duration: 1.1,
+        stagger: { 
+            amount: 0.5, 
+            from: "center" 
+        },
+        ease: "power3.inOut"
+    }, "start");
+
+    return tl;
 }
 ```
 
 ✔️ Reveals next page smoothly
-✔️ Resets animation loop
-✔️ Maintains consistent transition behavior
+✔️ Keeps animation loop reusable
+✔️ Maintains consistent transition flow
 
 ---
 
 ## 🔹 Barba.js Integration
 
-```js id="j1k2l3"
+```js id="js4"
 barba.init({
     transitions: [{
-        name: "dual-stair-transition",
+        name: "stair-transition",
 
-        leave() {
-            const done = this.async();
-            stairsIn().eventCallback("onComplete", done);
+        async leave() {
+            await stairsIn();
         },
 
-        enter() {
-            const done = this.async();
-
-            const stair1 = document.querySelectorAll('.stair-top');
-            const stair2 = document.querySelectorAll('.stair-bottom');
-
-            gsap.set(stair1, { yPercent: -100 });
-            gsap.set(stair2, { yPercent: 100 });
-
-            stairsOut().eventCallback("onComplete", done);
+        async enter() {
+            await stairsOut();
         }
     }]
 });
@@ -141,13 +152,13 @@ barba.init({
 
 * **leave()** → Dual stairs cover screen
 * **enter()** → Dual stairs reveal next page
-* **this.async()** → Ensures proper animation timing
+* **async/await** → Handles animation sequencing
 
 ---
 
 ## 🧱 HTML Structure
 
-```html id="m4n5o6"
+```html id="html1"
 <div id="transition">
     <div class="upper-stair">
         <div class="stair stair-top"></div>
@@ -171,7 +182,7 @@ barba.init({
 
 ## 🎨 CSS Structure
 
-```css id="p7q8r9"
+```css id="css1"
 #transition {
     position: fixed;
     inset: 0;
@@ -204,7 +215,7 @@ barba.init({
 
 * Full-screen dual coverage
 * Equal top & bottom split
-* Smooth GPU-based animation
+* Smooth animation structure
 * Clean layered layout
 
 ---
@@ -218,10 +229,10 @@ barba.init({
 ## 🧠 Key Takeaways
 
 * Dual-layer transitions feel more premium than single-layer
-* Split animations create better visual balance
-* GSAP timelines give precise control
-* Barba.js enables seamless page transitions
-* This is a **production-ready animation pattern**
+* Center-based stagger improves visual balance
+* GSAP timelines enable smooth animation control
+* Barba.js makes seamless page transitions easy
+* This is a **clean and scalable transition pattern**
 
 ---
 
